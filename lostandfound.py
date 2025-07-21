@@ -1,9 +1,9 @@
 from sqlite3 import IntegrityError
-
+import os
 from flask import json
 from config import Config
 from app import create_app, db
-from app.main.models import Post, Tag,Building
+from app.main.models import Post, Tag, Building
 import sqlalchemy as sqla
 import sqlalchemy.orm as sqlo
 
@@ -11,8 +11,9 @@ app = create_app(Config)
 
 @app.shell_context_processor
 def make_shell_context():
-    return {'sqla': sqla, 'sqlo': sqlo, 'db': db, 'Post': Post, 'Tag': Tag}  
+    return {'sqla': sqla, 'sqlo': sqlo, 'db': db, 'Post': Post, 'Tag': Tag, 'Building': Building}
 
+# Color and building data for initialization
 color_tags = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'brown', 'black', 'white', 'gray']
 building_tags = [
     'alden_memorial', 
@@ -34,6 +35,28 @@ building_tags = [
     'bartlett_center'
 ]
 
+def initialize_database():
+    """Initialize database with default data. Should be run once during setup."""
+    with app.app_context():
+        # Create all tables
+        db.create_all()
+        
+        # Add default tags if they don't exist
+        add_default_tags()
+        
+        # Load and add building data
+        data_file = "app/static/building_database/building.json"
+        if os.path.exists(data_file):
+            try:
+                data = load_json_data(data_file)
+                for building_data in data:
+                    add_or_update_building(building_data)
+                print("Database initialized successfully!")
+            except Exception as e:
+                print(f"Error loading building data: {e}")
+        else:
+            print(f"Warning: Building data file not found at {data_file}")
+
 def add_default_tags():
     # Check if there are any tags in the database
     existing_tags = db.session.scalars(sqla.select(Tag)).all()
@@ -52,15 +75,28 @@ def add_default_tags():
             print(f"Added building tag: {tag_name}")
 
     # Commit changes to the database
-    db.session.commit()
-    
+    try:
+        db.session.commit()
+        print("Default tags added successfully!")
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error adding default tags: {e}")
 
 DATA_FILE = "app/static/building_database/building.json"
 
 
 def load_json_data(file_path):
-    with open(file_path, 'r') as file:
-        return json.load(file)
+    """Load JSON data from file with error handling."""
+    try:
+        with open(file_path, 'r') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        print(f"Error: File {file_path} not found")
+        return []
+    except json.JSONDecodeError as e:
+        print(f"Error parsing JSON from {file_path}: {e}")
+        return []
+
 def add_or_update_building(json_data):
     with app.app_context():
         # Check if the record exists
@@ -88,19 +124,18 @@ def add_or_update_building(json_data):
             db.session.add(new_building)
         
         # Commit the changes to the database
-        db.session.commit()
+        try:
+            db.session.commit()
+            print(f"Building {json_data.get('name', 'Unknown')} added/updated successfully!")
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error adding/updating building: {e}")
 
-
-
-@app.before_request
-def initDB(*args, **kwargs):
-    if app._got_first_request:
-        db.create_all()
-        add_default_tags()
-        data = load_json_data(DATA_FILE)
-        for building_data in data:
-            add_or_update_building(building_data)
-
+# Command to initialize database (run this once during setup)
+@app.cli.command()
+def init_db():
+    """Initialize the database with default data."""
+    initialize_database()
 
 if __name__ == "__main__":
     app.run(debug=True)

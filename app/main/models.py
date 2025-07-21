@@ -61,6 +61,10 @@ class Post(db.Model):
     title: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(150), nullable=False)
     description: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(1500), nullable=False)
     timestamp: sqlo.Mapped[Optional[datetime]] = sqlo.mapped_column(default=lambda: datetime.now(timezone.utc))
+    
+    # Status tracking
+    status: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(20), default='lost', nullable=False)  # 'lost', 'found', 'closed'
+    found_date: sqlo.Mapped[Optional[datetime]] = sqlo.mapped_column()
 
     # Relationships for color and building tags
     color_tag_id: sqlo.Mapped[int] = sqlo.mapped_column(sqla.ForeignKey('tag.id'), nullable=False)
@@ -83,34 +87,33 @@ class Post(db.Model):
     image = db.relationship('ImageStore', backref='post', uselist=False)
 
     def __repr__(self):
-        return f"<Post id={self.id} title={self.title}>"
+        return f"<Post id={self.id} title={self.title} status={self.status}>"
+    
+    def mark_as_found(self):
+        """Mark the post as found."""
+        self.status = 'found'
+        self.found_date = datetime.now(timezone.utc)
+    
+    def is_still_lost(self):
+        """Check if item is still lost."""
+        return self.status == 'lost'
 
 
 # Image Store Model
 class ImageStore(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete='CASCADE'), nullable=False)
-    image_data = db.Column(db.LargeBinary, nullable=False)
-    image_type = db.Column(db.String(50), nullable=True)
+    id: sqlo.Mapped[int] = sqlo.mapped_column(primary_key=True)
+    post_id: sqlo.Mapped[int] = sqlo.mapped_column(sqla.ForeignKey('post.id', ondelete='CASCADE'), nullable=False)
+    image_data: sqlo.Mapped[bytes] = sqlo.mapped_column(sqla.LargeBinary, nullable=False)
+    image_type: sqlo.Mapped[Optional[str]] = sqlo.mapped_column(sqla.String(50))
 
 class Building(db.Model):
-    building_id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-    count = db.Column(db.Integer)
-    title = db.Column(ARRAY(db.String(200)))
-    body = db.Column(ARRAY(db.String(200)))
-    theme_image_link = db.Column(db.String(50))
-    image_link = db.Column(ARRAY(db.String(50)))
+    building_id: sqlo.Mapped[int] = sqlo.mapped_column(primary_key=True)
+    name: sqlo.Mapped[Optional[str]] = sqlo.mapped_column(sqla.String(50))
+    count: sqlo.Mapped[Optional[int]] = sqlo.mapped_column(sqla.Integer)
+    title: sqlo.Mapped[Optional[list[str]]] = sqlo.mapped_column(ARRAY(sqla.String(200)))
+    body: sqlo.Mapped[Optional[list[str]]] = sqlo.mapped_column(ARRAY(sqla.String(200)))
+    theme_image_link: sqlo.Mapped[Optional[str]] = sqlo.mapped_column(sqla.String(50))
+    image_link: sqlo.Mapped[Optional[list[str]]] = sqlo.mapped_column(ARRAY(sqla.String(50)))
     
-    def get_name(self):
-        return self.name
-    def get_count(self):
-        return self.count
-    def get_place(self):
-        return self.title
-    def get_body(self):
-        return self.body
-    def get_image(self):
-        return self.image_link
-    def get_theme(self):
-        return self.theme_image_link
+    def __repr__(self):
+        return f"<Building id={self.building_id} name={self.name}>"

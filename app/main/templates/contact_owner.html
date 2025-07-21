@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% import 'bootstrap_wtf.html' as wtf %}
+
+{% block app_content %}
+<div class="row">
+    <div class="col-md-8">
+        <h2>Contact Item Owner</h2>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Lost Item Details</h5>
+            </div>
+            <div class="card-body">
+                <h6 class="card-title">{{ post.title }}</h6>
+                <p class="card-text">{{ post.description }}</p>
+                <p class="text-muted">
+                    <small>Posted by {{ post.writer.username }} on {{ moment(post.timestamp).format('LLLL') }}</small>
+                </p>
+                <p class="text-muted">
+                    <small>
+                        Color: <span class="badge badge-secondary">{{ post.color_tag.name.title() if post.color_tag else 'Not specified' }}</span>
+                        Building: <span class="badge badge-info">{{ post.building_tag.name.replace('_', ' ').title() if post.building_tag else 'Not specified' }}</span>
+                    </small>
+                </p>
+                {% if post.image %}
+                <img src="{{ url_for('main.get_image', post_id=post.id) }}" class="img-thumbnail" style="max-width: 200px;">
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5>Send Message to Owner</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-info">
+                    <i class="fas fa-info-circle"></i>
+                    If you found this item, please provide details about where and when you found it, 
+                    and how the owner can contact you to arrange pickup.
+                </p>
+                
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="form-group">
+                        {{ form.finder_name.label(class="form-label") }}
+                        {{ form.finder_name(class="form-control") }}
+                        {% for error in form.finder_name.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form.finder_email.label(class="form-label") }}
+                        {{ form.finder_email(class="form-control") }}
+                        <small class="form-text text-muted">The owner will use this email to contact you.</small>
+                        {% for error in form.finder_email.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form.message.label(class="form-label") }}
+                        {{ form.message(class="form-control", rows="4") }}
+                        <small class="form-text text-muted">Please provide specific details about where/when you found the item.</small>
+                        {% for error in form.message.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form.submit(class="btn btn-primary") }}
+                        <a href="{{ url_for('main.index') }}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h6>Tips for Finders</h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li>✓ Be specific about where you found the item</li>
+                    <li>✓ Mention when you found it</li>
+                    <li>✓ Provide your contact information</li>
+                    <li>✓ Suggest a safe meeting place for pickup</li>
+                    <li>✓ Be patient - the owner will contact you soon</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
