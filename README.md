@@ -6,7 +6,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/samnguyen3115/lostandfound">
-    <img src="app/static/img/lostandfound.png" alt="Logo" width="80" height="80">
+    <img src="app/static/img/lostandfound.png" alt="Logo" width="800" height="800">
   </a>
 
 <h3 align="center">Lost & Found Portal</h3>
