@@ -14,10 +14,6 @@
   <p align="center">
     A comprehensive Flask web application for managing lost and found items on campus
     <br />
-    <a href="https://github.com/samnguyen3115/lostandfound"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/samnguyen3115/lostandfound">View Demo</a>
     ·
     <a href="https://github.com/samnguyen3115/lostandfound/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     ·
@@ -45,6 +41,7 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#api-endpoints">API Endpoints</a></li>
     <li><a href="#project-structure">Project Structure</a></li>
     <li><a href="#contributing">Contributing</a></li>
@@ -58,10 +55,6 @@
 ## About The Project
 
 The Lost & Found Portal is a comprehensive web application designed to help campus communities manage lost and found items efficiently. Built with Flask and modern web technologies, it provides a user-friendly interface for posting lost items, browsing found items, and connecting finders with owners.
-
-**Student Information:**
-- **Name:** Tran Minh Duc Nguyen
-- **Major:** Computer Science
 
 ### Key Features
 
@@ -77,7 +70,6 @@ The Lost & Found Portal is a comprehensive web application designed to help camp
 * **RESTful API** - JSON endpoints for mobile and external integrations
 * **Responsive Design** - Mobile-friendly interface using Bootstrap
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Built With
 
@@ -90,7 +82,6 @@ The Lost & Found Portal is a comprehensive web application designed to help camp
 * [![CSS3][CSS3.com]][CSS3-url]
 * [![Python][Python.com]][Python-url]
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -167,7 +158,6 @@ To get a local copy up and running, follow these steps.
 
 The application will be available at `http://localhost:5000`
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -192,127 +182,32 @@ The application will be available at `http://localhost:5000`
 - **User Management** - View and manage user accounts
 - **Building Database** - Campus building information and locations
 - **Email System** - Automated notifications for important events
-- **API Access** - RESTful endpoints for external integrations
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- API ENDPOINTS -->
-## API Endpoints
+<!-- ROADMAP -->
+## Roadmap
 
-The application provides RESTful API endpoints for external access:
+### Completed Features
+- [x] **User Authentication** - Registration, login, logout system
+- [x] **Item Posting** - Create posts with title, description, images, and tags
+- [x] **Basic Filtering** - Filter by color and building location
+- [x] **Contact System** - Email-based contact between users
+- [x] **Interactive Campus Map** - Clickable building map with details
+- [x] **Image Upload** - Support for JPG, PNG image uploads
+- [x] **RESTful API** - JSON endpoints for posts and tags
+- [x] **Responsive Design** - Bootstrap-based mobile-friendly interface
 
-### Posts
-```http
-GET /api/posts?page=1&per_page=20&color=red&building=library&status=lost
-```
-Returns paginated list of posts with optional filters.
+### Planned Enhancements
+- [ ] **Advanced Search** - Full-text search across titles and descriptions
+- [ ] **User Profiles** - Personal dashboards and post management
+- [ ] **In-App Messaging** - Direct communication between users  
+- [ ] **Smart Notifications** - Automated matching suggestions and enhanced email alerts
+- [ ] **Mobile Apps** - Native iOS/Android applications
+- [ ] **UI/UX Overhaul** - Modern design with dark mode support
+- [ ] **Third-Party Integration** - Campus security and social media sharing
 
-### Tags
-```http
-GET /api/tags
-```
-Returns all available color and building tags.
+See the [open issues](https://github.com/samnguyen3115/lostandfound/issues) for a full list of proposed features (and known issues).
 
-### Example Response
-```json
-{
-  "posts": [
-    {
-      "id": 1,
-      "title": "Blue iPhone 13",
-      "description": "Left in Gordon Library study room",
-      "timestamp": "2025-01-20T14:30:00Z",
-      "status": "lost",
-      "color_tag": "blue", 
-      "building_tag": "gordon_library",
-      "owner": "student123",
-      "has_image": true
-    }
-  ],
-  "pagination": {
-    "page": 1,
-    "pages": 5,
-    "total": 47
-  }
-}
-```
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- PROJECT STRUCTURE -->
-## Project Structure
-
-```
-lostandfound/
-├── app/                          # Application package
-│   ├── auth/                     # Authentication blueprint  
-│   │   ├── auth_forms.py         # Login/register forms
-│   │   └── auth_routes.py        # Auth routes
-│   ├── errors/                   # Error handling blueprint
-│   ├── main/                     # Main application blueprint
-│   │   ├── templates/            # Jinja2 templates
-│   │   ├── api_routes.py         # API endpoints
-│   │   ├── contact_forms.py      # Contact system forms
-│   │   ├── forms.py              # Main application forms  
-│   │   ├── models.py             # Database models
-│   │   ├── profile_forms.py      # User profile forms
-│   │   └── routes.py             # Main routes
-│   ├── static/                   # Static assets
-│   │   ├── css/                  # Stylesheets
-│   │   ├── js/                   # JavaScript files
-│   │   ├── img/                  # Images
-│   │   └── building_database/    # Campus building data
-│   ├── __init__.py               # App factory
-│   └── email.py                  # Email functionality
-├── migrations/                   # Database migrations
-├── tests/                        # Unit tests
-├── config.py                     # Configuration settings
-├── lostandfound.py               # Application entry point
-├── init_database.py              # Database initialization
-├── requirements.txt              # Python dependencies
-└── .env                          # Environment variables
-```
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- CONTRIBUTING -->
-## Contributing
-
-Contributions make the open source community an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have suggestions for improvement:
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-### Development Guidelines
-
-- Follow PEP 8 Python style guidelines
-- Write descriptive commit messages
-- Add tests for new features
-- Update documentation as needed
-- Ensure all tests pass before submitting PR
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- CONTACT -->
-## Contact
-
-**Tran Minh Duc Nguyen** - Computer Science Student
-
-Project Link: [https://github.com/samnguyen3115/lostandfound](https://github.com/samnguyen3115/lostandfound)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
@@ -325,7 +220,6 @@ Project Link: [https://github.com/samnguyen3115/lostandfound](https://github.com
 * [WPI Campus](https://www.wpi.edu/) - For inspiration and building data
 * [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 [contributors-shield]: https://img.shields.io/github/contributors/samnguyen3115/lostandfound.svg?style=for-the-badge
