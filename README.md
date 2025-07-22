@@ -6,7 +6,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/samnguyen3115/lostandfound">
-    <img src="app/static/img/lostandfound.ico" alt="Logo" width="80" height="80">
+    <img src="app/static/img/lostandfound.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">Lost & Found Portal</h3>
@@ -56,19 +56,6 @@
 
 The Lost & Found Portal is a comprehensive web application designed to help campus communities manage lost and found items efficiently. Built with Flask and modern web technologies, it provides a user-friendly interface for posting lost items, browsing found items, and connecting finders with owners.
 
-### Key Features
-
-* **User Authentication** - Secure registration and login system
-* **Item Posting** - Post lost items with descriptions, images, and location tags
-* **Smart Filtering** - Filter items by color, building location, and status
-* **Interactive Campus Map** - Visual building locations with detailed information  
-* **Contact System** - Secure messaging between finders and owners
-* **Email Notifications** - Automated notifications when items are potentially found
-* **Status Tracking** - Mark items as lost, found, or closed
-* **Image Upload** - Support for item photos with automatic resizing
-* **Pagination** - Efficient browsing of large item collections
-* **RESTful API** - JSON endpoints for mobile and external integrations
-* **Responsive Design** - Mobile-friendly interface using Bootstrap
 
 
 ### Built With
@@ -217,23 +204,14 @@ See the [open issues](https://github.com/samnguyen3115/lostandfound/issues) for 
 * [Font Awesome](https://fontawesome.com)
 * [PostgreSQL](https://www.postgresql.org/)
 * [SQLAlchemy](https://www.sqlalchemy.org/)
-* [WPI Campus](https://www.wpi.edu/) - For inspiration and building data
-* [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
+
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
-[contributors-shield]: https://img.shields.io/github/contributors/samnguyen3115/lostandfound.svg?style=for-the-badge
-[contributors-url]: https://github.com/samnguyen3115/lostandfound/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/samnguyen3115/lostandfound.svg?style=for-the-badge
-[forks-url]: https://github.com/samnguyen3115/lostandfound/network/members
-[stars-shield]: https://img.shields.io/github/stars/samnguyen3115/lostandfound.svg?style=for-the-badge
-[stars-url]: https://github.com/samnguyen3115/lostandfound/stargazers
 [issues-shield]: https://img.shields.io/github/issues/samnguyen3115/lostandfound.svg?style=for-the-badge
 [issues-url]: https://github.com/samnguyen3115/lostandfound/issues
 [license-shield]: https://img.shields.io/github/license/samnguyen3115/lostandfound.svg?style=for-the-badge
 [license-url]: https://github.com/samnguyen3115/lostandfound/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/samnguyen3115
 [Flask.py]: https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white
 [Flask-url]: https://flask.palletsprojects.com/
 [PostgreSQL.com]: https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white
