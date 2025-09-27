@@ -186,3 +186,9 @@ if __name__ == "__main__":
     check_and_init_database()
     app.run(debug=True)
 
+@app.route("/")
+def index():
+    return "Hello Railway!"
+@app.route("/ping")
+def ping():
+    return "pong"
