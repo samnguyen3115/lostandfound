@@ -6,6 +6,7 @@ from app import create_app, db
 from app.main.models import Post, Tag, Building
 import sqlalchemy as sqla
 import sqlalchemy.orm as sqlo
+from flask import Flask
 
 app = create_app(Config)
 
