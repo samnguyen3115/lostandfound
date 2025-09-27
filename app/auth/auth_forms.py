@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 import sqlalchemy as sqla
 from wtforms import StringField, SubmitField,PasswordField,BooleanField,validators
-from wtforms.validators import  ValidationError, DataRequired, EqualTo, Email
+from wtforms.validators import  ValidationError, DataRequired, EqualTo, Email, Length, Regexp
 from app.main.models import User
 from app import db
 
@@ -22,9 +22,19 @@ class RegistrationForm(FlaskForm):
         user = db.session.scalars(query).first()
         if user is not None:
             raise validators.ValidationError('Email is already existed, Please use a different email.')
+
+class EmailVerificationForm(FlaskForm):
+    verification_code = StringField('Verification Code', 
+                                  validators=[DataRequired(), 
+                                            Length(min=5, max=5, message='Code must be exactly 5 digits'),
+                                            Regexp(r'^\d{5}$', message='Code must contain only numbers')])
+    submit = SubmitField('Verify Email')
+
+class ResendCodeForm(FlaskForm):
+    submit = SubmitField('Resend Code')
         
 class LoginForm(FlaskForm):
-    username = StringField('username',validators= [DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password',validators= [DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Login')

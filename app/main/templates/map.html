@@ -16,6 +16,7 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/main.css') }}"
     />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -25,6 +26,9 @@
         align-items: center;
         justify-content: center;
         background-color: #f9f9f9;
+      }
+      #map {
+        height: calc(90vh - 56px);
       }
     </style>
   </head>
@@ -65,15 +69,6 @@
                 aria-current="page"
                 href="{{ url_for('main.postsmile') }}"
                 >Post Found Item</a
-              >
-            </li>
-            <li class="nav-item border border-light px-2 ms-2 rounded-item">
-              <a
-                class="nav-link"
-                style="color: white"
-                aria-current="page"
-                href="{{ url_for('main.map') }}"
-                >Lost And Found Map</a
               >
             </li>
             <li class="nav-item border border-light px-2 ms-2 rounded-item">
@@ -127,199 +122,57 @@
       Please choose the building you want to know the Lost And Found spot
     </p>
     <br />
-    <div
-      class="container d-flex justify-content-center align-items-center"
-      style="height: calc(100vh - 56px)"
-    >
-      <img
-        src="{{ url_for('static', filename='img/map.png') }}"
-        alt="Map"
-        usemap="#image-map"
-        id="map-image"
-        style="
-          border: 5px solid #000000;
-          border-radius: 10px;
-          margin: 20px;
-          width: 90%;
-        "
-      />
+    <div id="map" style="width:80%; height: 70%; margin: 0 auto;"></div>
 
-      <map name="image-map">
-        <area
-          target=""
-          alt="Rec center"
-          title="Rec center"
-          href="{{ url_for('main.map_building', building_id = 14) }}"
-          coords="323,348,319,375,186,559,266,615,283,584,365,586,379,525,384,464,403,473,419,452,384,425,394,359"
-          shape="poly"
-        />
-        <area
-          target=""
-          alt="Morgan Dining Hall"
-          title="Morgan Dining Hall"
-          href="{{ url_for('main.map_building', building_id = 13) }}"
-          coords="273,754,294,757,320,761,510,784,522,750,384,722,335,677,331,638,306,625,197,708,190,735"
-          shape="poly"
-        />
-        <area
-          target=""
-          alt="Harrington"
-          title="Harrington"
-          href="{{ url_for('main.map_building', building_id = 15) }}"
-          coords="428,332,418,373,420,432,488,458,572,454,587,398,590,356"
-          shape="poly"
-        />
-        <area
-          target=""
-          alt="Innovation"
-          title="Innovation"
-          href="{{ url_for('main.map_building', building_id = 12) }}"
-          coords="636,374,752,391,728,489,621,470"
-          shape="poly"
-        />
-        <area
-          target=""
-          alt="Campus Center"
-          title="Campus Center"
-          href="{{ url_for('main.map_building', building_id = 9) }}"
-          coords="789,347,757,360,652,350,655,333,698,335,702,292,750,290,779,233,786,197,841,202,826,313"
-          shape="poly"
-        />
-        <area
-          target=""
-          alt="Higgin Lab"
-          title="Higgin Lab"
-          href="{{ url_for('main.map_building', building_id = 6) }}"
-          coords="768,424,752,520,769,520,757,550,847,567,856,542,831,531,841,448,871,450,874,416,806,404"
-          shape="poly"
-        />
-        <area
-          target=""
-          alt="Alden Memorial"
-          title="Alden Memorial"
-          href="{{ url_for('main.map_building', building_id = 1) }}"
-          coords="762,710,807,716,801,787,839,791,840,805,801,803,792,818,741,817"
-          shape="poly"
-        />
-        <area
-          target=""
-          alt="Stratton Hall"
-          title="Stratton Hall"
-          href="{{ url_for('main.map_building', building_id = 11) }}"
-          coords="926,521,911,608,953,620,964,525"
-          shape="poly"
-        />
-        <area
-          target=""
-          alt="Olin Hall"
-          title="Olin Hall"
-          href="{{ url_for('main.map_building', building_id = 8) }}"
-          coords="868,163,846,323,882,337,889,325,895,299,917,168"
-          shape="poly"
-        />
-        <area
-          target=""
-          alt="Salisbury Lab"
-          title="Salisbury Lab"
-          href="{{ url_for('main.map_building', building_id = 10) }}"
-          coords="1044,333,1049,275,1123,285,1113,345,1099,422,1058,418,1056,395,996,385,1002,334"
-          shape="poly"
-        />
-        <area
-          target=""
-          alt="Atwater Kent Lab"
-          title="Atwater Kent Lab"
-          href="{{ url_for('main.map_building', building_id = 2) }} "
-          coords="1037,83,1081,97,1066,136,1120,163,1143,139,1178,156,1136,238,1108,229,1098,242,1010,193,1019,171,993,162"
-          shape="poly"
-        />
-        <area
-          target=""
-          alt="Fuller Lab"
-          title="Fuller Lab"
-          href="{{ url_for('main.map_building', building_id = 3) }}"
-          coords="1147,249,1169,239,1162,219,1226,186,1273,263,1179,303"
-          shape="poly"
-        />
-        <area
-          target=""
-          alt="Gordon Library"
-          title="Gordon Library"
-          href="{{ url_for('main.map_building', building_id = 4) }}"
-          coords="1178,405,1158,469,1159,528,1231,542,1248,411"
-          shape="poly"
-        />
-        <area
-          target=""
-          alt="Unity Hall"
-          title="Unity Hall"
-          href="{{ url_for('main.map_building', building_id = 16) }}"
-          coords="1201,600,1149,588,1148,621,1200,649,1312,663,1317,582,1208,567"
-          shape="poly"
-        />
-        <area
-          target=""
-          alt="The field"
-          title="The field"
-          href="{{ url_for('main.map_building', building_id = 18) }}"
-          coords="0,730,28,744,285,389,105,270,0,419"
-          shape="poly"
-        />
-        <area
-          target=""
-          alt="Stoddard Lab"
-          title="Stoddard Lab"
-          href="{{ url_for('main.map_building', building_id = 19) }}"
-          coords="1001,472,1094,487,1084,522,996,508"
-          shape="poly"
-        />
-        <area
-          target=""
-          alt="Ballete Center"
-          title="Ballete Center"
-          href="{{ url_for('main.map_building', building_id = 17) }}"
-          coords="644,567,634,659,687,666,700,568"
-          shape="poly"
-        />
-      </map>
-    </div>
-
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const img = document.querySelector("#map-image");
-        const map = document.querySelector("map");
-        let originalWidth, originalHeight;
+      // WPI campus bounds (approximate)
+      var campusBounds = L.latLngBounds([
+          [42.2737, -71.8082], // Southwest corner
+          [42.2762, -71.8045]  // Northeast corner (slightly expanded)
+      ]);
 
-        // Wait for the image to load
-        img.addEventListener("load", () => {
-          originalWidth = img.naturalWidth;
-          originalHeight = img.naturalHeight;
-          scaleMap(); // Scale map on initial load
-        });
+      // Initialize map centered on WPI campus
+      var map = L.map('map', {
+          center: [42.2747, -71.8063],
+          zoom: 17,
+          maxBounds: campusBounds,
+          maxBoundsViscosity: 1.0,
+          minZoom: 16,
+          maxZoom: 19
+      });
 
-        function scaleMap() {
-          // Get the current width and height of the image in the document
-          const imgWidth = img.offsetWidth;
-          const imgHeight = img.offsetHeight;
+      // Add OpenStreetMap tiles
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
 
-          // Calculate the scaling factors
-          const scaleX = imgWidth / originalWidth;
-          const scaleY = imgHeight / originalHeight;
+      // WPI buildings with coordinates
+      var buildings = [
+          { name: 'Alden Memorial', lat: 42.2749, lng: -71.8067, info: 'Historic auditorium and event space.' },
+          { name: 'Atwater Kent', lat: 42.2753, lng: -71.8057, info: 'Electrical & Computer Engineering.' },
+          { name: 'Fuller Labs', lat: 42.2752, lng: -71.8052, info: 'Computer Science & Robotics.' },
+          { name: 'Gordon Library', lat: 42.2742, lng: -71.8058, info: 'Main campus library.' },
+          { name: 'Goddard Hall', lat: 42.2747, lng: -71.8053, info: 'Mechanical Engineering.' },
+          { name: 'Higgins Labs', lat: 42.2756, lng: -71.8062, info: 'Biomedical & Chemical Engineering.' },
+          { name: 'Kaven Hall', lat: 42.2757, lng: -71.8050, info: 'Civil & Environmental Engineering.' },
+          { name: 'Olin Hall', lat: 42.2750, lng: -71.8047, info: 'Life Sciences & Bioengineering.' },
+          { name: 'Campus Center', lat: 42.2745, lng: -71.8072, info: 'Student hub and dining.' },
+          { name: 'Salisbury Labs', lat: 42.2748, lng: -71.8055, info: 'Humanities & Arts.' },
+          { name: 'Stratton Hall', lat: 42.2751, lng: -71.8060, info: 'Mathematical Sciences.' },
+          { name: 'Innovation Studio', lat: 42.2750, lng: -71.8065, info: 'Project-based learning space.' },
+          { name: 'Morgan Dining Hall', lat: 42.2754, lng: -71.8070, info: 'Dining and events.' },
+          { name: 'Sports & Recreation Center', lat: 42.2760, lng: -71.8075, info: 'Athletics and recreation.' },
+          { name: 'Harrington Auditorium', lat: 42.2758, lng: -71.8072, info: 'Events and athletics.' },
+          { name: 'Unity Hall', lat: 42.2761, lng: -71.8056, info: 'Academic and student services.' },
+          { name: 'Bartlett Center', lat: 42.2743, lng: -71.8069, info: 'Admissions and welcome center.' }
+      ];
 
-          // Scale the coordinates of all the clickable areas
-          map.querySelectorAll("area").forEach((area) => {
-            const coords = area.getAttribute("coords").split(",").map(Number);
-            const newCoords = coords.map((coord, index) =>
-              index % 2 === 0
-                ? Math.round(coord * scaleX)
-                : Math.round(coord * scaleY)
-            );
-            area.setAttribute("coords", newCoords.join(","));
-          });
-        }
-
-        // Trigger scaling of the map whenever the window is resized
-        window.addEventListener("resize", scaleMap);
+      // Add markers for each building
+      buildings.forEach(function(building) {
+          var marker = L.marker([building.lat, building.lng]).addTo(map);
+          marker.bindPopup('<b>' + building.name + '</b><br>' + building.info);
       });
     </script>
   </body>

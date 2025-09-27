@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% from 'bootstrap_wtf.html' import form_field %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h3><i class="fas fa-envelope-open-text"></i> Email Verification</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        We've sent a 5-digit verification code to <strong>{{ user_email }}</strong>
+                        <br><small>Please check your email and enter the code below. The code expires in 15 minutes.</small>
+                    </div>
+
+                    <form action="" method="post" novalidate>
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="form-group mb-3">
+                            {{ form.verification_code.label(class="form-label") }}
+                            {{ form.verification_code(class="form-control form-control-lg text-center", 
+                                placeholder="Enter 5-digit code", 
+                                style="letter-spacing: 0.5em; font-size: 1.5em;",
+                                maxlength="5") }}
+                            {% for error in form.verification_code.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-primary btn-lg") }}
+                        </div>
+                    </form>
+
+                    <hr>
+                    
+                    <div class="text-center">
+                        <p class="mb-2">Didn't receive the code?</p>
+                        <form action="{{ url_for('auth.resend_verification') }}" method="post" class="d-inline">
+                            {{ resend_form.hidden_tag() }}
+                            {{ resend_form.submit(class="btn btn-outline-secondary btn-sm") }}
+                        </form>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <small class="text-muted">
+                            <i class="fas fa-shield-alt"></i>
+                            Check your spam folder if you don't see the email
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-focus on the verification code input
+document.addEventListener('DOMContentLoaded', function() {
+    const codeInput = document.getElementById('verification_code');
+    if (codeInput) {
+        codeInput.focus();
+        
+        // Only allow numbers
+        codeInput.addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value.length > 5) {
+                this.value = this.value.slice(0, 5);
+            }
+        });
+        
+        // Auto-submit when 5 digits are entered
+        codeInput.addEventListener('input', function(e) {
+            if (this.value.length === 5) {
+                // Add a small delay to allow user to see the complete code
+                setTimeout(() => {
+                    this.form.submit();
+                }, 500);
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

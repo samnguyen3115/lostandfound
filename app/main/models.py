@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import Optional
 from app import db, login
 import sqlalchemy as sqla
@@ -6,6 +6,7 @@ import sqlalchemy.orm as sqlo
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from sqlalchemy.dialects.postgresql import ARRAY
+import random
 
 
 @login.user_loader
@@ -28,6 +29,12 @@ class User(UserMixin, db.Model):
     username: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(64), unique=True, nullable=False)
     email: sqlo.Mapped[str] = sqlo.mapped_column(sqla.String(120), unique=True, nullable=False)
     password_hash: sqlo.Mapped[Optional[str]] = sqlo.mapped_column(sqla.String(256))
+    
+    # Email verification fields
+    email_verified: sqlo.Mapped[bool] = sqlo.mapped_column(default=False)
+    verification_code: sqlo.Mapped[Optional[str]] = sqlo.mapped_column(sqla.String(5))
+    verification_code_expires: sqlo.Mapped[Optional[datetime]] = sqlo.mapped_column()
+    
     posts: sqlo.WriteOnlyMapped[list["Post"]] = sqlo.relationship("Post", back_populates='writer', cascade="all, delete-orphan")
 
     def set_password(self, password):
@@ -35,6 +42,49 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return self.password_hash is not None and check_password_hash(self.password_hash, password)
+    
+    def generate_verification_code(self, expiration_minutes=15):
+        """Generate a 5-digit verification code that expires in specified minutes."""
+        self.verification_code = f"{random.randint(10000, 99999)}"
+        # Use local time instead of UTC to match user's timezone
+        from datetime import datetime
+        current_local_time = datetime.now()
+        self.verification_code_expires = current_local_time + timedelta(minutes=expiration_minutes)
+        print(f"DEBUG: Current local time: {current_local_time}")
+        print(f"DEBUG: Generated code expires at (local): {self.verification_code_expires}")
+        return self.verification_code
+    
+    def verify_email_code(self, code):
+        """Check if the provided code matches and hasn't expired."""
+        print(f"DEBUG: verify_email_code called with code: '{code}'")
+        print(f"DEBUG: stored verification_code: '{self.verification_code}'")
+        print(f"DEBUG: verification_code_expires: {self.verification_code_expires}")
+        
+        if not self.verification_code or not self.verification_code_expires:
+            print("DEBUG: No verification code or expiration time set")
+            return False
+        
+        # Use local time for comparison
+        from datetime import datetime
+        current_local_time = datetime.now()
+        expiration_time = self.verification_code_expires
+        
+        print(f"DEBUG: current_local_time: {current_local_time}")
+        print(f"DEBUG: expiration_time: {expiration_time}")
+        
+        if current_local_time > expiration_time:
+            print("DEBUG: Code has expired")
+            return False
+            
+        if self.verification_code == code:
+            print("DEBUG: Code matches! Setting email_verified to True")
+            self.email_verified = True
+            self.verification_code = None
+            self.verification_code_expires = None
+            return True
+        
+        print("DEBUG: Code does not match")
+        return False
 
     def __repr__(self):
         return f"<User id={self.id} username={self.username}>"

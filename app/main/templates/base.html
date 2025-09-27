@@ -65,15 +65,6 @@
                 class="nav-link"
                 style="color: white"
                 aria-current="page"
-                href="{{ url_for('main.map') }}"
-                >Lost And Found Map</a
-              >
-            </li>
-            <li class="nav-item border border-light px-2 ms-2 rounded-item">
-              <a
-                class="nav-link"
-                style="color: white"
-                aria-current="page"
                 href="https://fs28.formsite.com/webteamwpiedu/lost-and-found/index.html?1574433553570="
                 >Police Form</a
               >
@@ -119,7 +110,7 @@
     <div class="container mt-3">
       {% with messages = get_flashed_messages() %} {% if messages %} {% for
       message in messages %}
-      <div class="alert alert-info" role="alert">{{ message }}</div>
+  <div class="alert alert-danger" role="alert">{{ message }}</div>
       {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock %}
     </div>
     <script

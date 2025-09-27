@@ -9,6 +9,38 @@ import sqlalchemy.orm as sqlo
 
 app = create_app(Config)
 
+def check_and_init_database():
+    """Check if database exists and initialize it if it doesn't."""
+    with app.app_context():
+        try:
+            # Try to query for existing tables using SQLAlchemy inspector
+            inspector = sqla.inspect(db.engine)
+            existing_tables = inspector.get_table_names()
+            
+            # If no tables exist, initialize the database
+            if not existing_tables or len(existing_tables) == 0:
+                print("No database tables found. Initializing database...")
+                initialize_database()
+            else:
+                # Check if we have the required tables
+                required_tables = ['post', 'tag', 'building']  # Adjust based on your model names
+                existing_table_names = [table.lower() for table in existing_tables]
+                
+                missing_tables = [table for table in required_tables if table not in existing_table_names]
+                
+                if missing_tables:
+                    print(f"Missing tables detected: {missing_tables}. Initializing database...")
+                    initialize_database()
+                else:
+                    print("Database already initialized.")
+                    
+        except Exception as e:
+            print(f"Database check failed, attempting to initialize: {e}")
+            try:
+                initialize_database()
+            except Exception as init_error:
+                print(f"Database initialization failed: {init_error}")
+
 @app.shell_context_processor
 def make_shell_context():
     return {'sqla': sqla, 'sqlo': sqlo, 'db': db, 'Post': Post, 'Tag': Tag, 'Building': Building}
@@ -137,6 +169,19 @@ def init_db():
     """Initialize the database with default data."""
     initialize_database()
 
+# Auto-initialize database on first request (Flask 2.2+ compatible)
+_database_initialized = False
+
+@app.before_request
+def auto_init_database():
+    """Automatically initialize database on first request if needed."""
+    global _database_initialized
+    if not _database_initialized:
+        check_and_init_database()
+        _database_initialized = True
+
 if __name__ == "__main__":
+    # Check and initialize database if needed
+    check_and_init_database()
     app.run(debug=True)
 
